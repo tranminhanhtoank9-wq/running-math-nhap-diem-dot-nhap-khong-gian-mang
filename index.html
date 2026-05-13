@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Running Math 2026 - Phiếu Điểm Trạm 2</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e0f7fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #00796b;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            color: #555;
+            font-size: 18px;
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .theme-text {
+            font-style: italic;
+            color: #777;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .instructions {
+            text-align: left;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #00796b;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        label {
+            font-weight: bold;
+            color: #004d40;
+            width: 40%;
+            font-size: 15px;
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 55%;
+            padding: 10px;
+            border: 2px solid #b2dfdb;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            border-color: #00796b;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 121, 107, 0.3);
+        }
+
+        .error-message {
+            color: #c62828;
+            background-color: #ffcdd2;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: none;
+            border: 1px solid #ef9a9a;
+        }
+
+        button.main-btn {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button.main-btn:hover {
+            background-color: #004d40;
+        }
+
+        #result-area {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none; /* Ẩn lúc đầu */
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .calc-details {
+            font-size: 15px;
+            margin-bottom: 10px;
+        }
+
+        .final-score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Thông báo thành công */
+        .success {
+            background-color: #e8f5e9;
+            border: 2px solid #4caf50;
+            color: #2e7d32;
+        }
+
+        .keyword-box {
+            margin-top: 10px;
+            padding: 15px;
+            background-color: #fff;
+            border: 3px dashed #4caf50;
+            border-radius: 8px;
+            font-size: 32px;
+            font-weight: bold;
+            color: #1b5e20;
+            letter-spacing: 3px;
+        }
+
+        /* Thông báo thất bại */
+        .fail {
+            background-color: #ffebee;
+            border: 2px solid #f44336;
+            color: #c62828;
+        }
+
+        .try-again {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        button.reset-btn {
+            background-color: #757575;
+            color: white;
+            border: none;
+            margin-top: 20px;
+            font-size: 14px;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: auto;
+            transition: background-color 0.3s;
+        }
+
+        button.reset-btn:hover {
+            background-color: #424242;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Running Math 2026</h1>
+    <h2>Trạm 2: Không Gian Số Hóa</h2>
+
+    <div class="instructions">
+        <i>Nhập điểm LMS Canvas của từng thành viên (tối đa 20).<br>
+        Để trống nếu nhóm có ít hơn 6 người. Hệ thống tự động tính điểm trung bình.</i>
+    </div>
+
+    <div id="error-message" class="error-message"></div>
+
+    <div id="info-container" style="margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px dashed #ccc;">
+        <div class="input-group">
+            <label for="teamName">Tên nhóm:</label>
+            <input type="text" id="teamName" placeholder="Nhập tên nhóm...">
+        </div>
+        <div class="input-group">
+            <label for="className">Tên lớp:</label>
+            <input type="text" id="className" placeholder="Nhập tên lớp...">
+        </div>
+    </div>
+
+    <div id="inputs-container">
+        <div class="input-group">
+            <label for="score1">Học sinh 1:</label>
+            <input type="number" id="score1" min="0" max="20" placeholder="0 - 20" step="any">
+        </div>
+        <div class="input-group">
+            <label for="score2">Học sinh 2:</label>
+            <input type="number" id="score2" min="0" max="20" placeholder="0 - 20" step="any">
+        </div>
+        <div class="input-group">
+            <label for="score3">Học sinh 3:</label>
+            <input type="number" id="score3" min="0" max="20" placeholder="0 - 20" step="any">
+        </div>
+        <div class="input-group">
+            <label for="score4">Học sinh 4:</label>
+            <input type="number" id="score4" min="0" max="20" placeholder="0 - 20" step="any">
+        </div>
+        <div class="input-group">
+            <label for="score5">Học sinh 5:</label>
+            <input type="number" id="score5" min="0" max="20" placeholder="0 - 20" step="any">
+        </div>
+        <div class="input-group">
+            <label for="score6">Học sinh 6:</label>
+            <input type="number" id="score6" min="0" max="20" placeholder="0 - 20" step="any">
+        </div>
+    </div>
+
+    <button class="main-btn" onclick="calculateAverage()">TÍNH ĐIỂM TRUNG BÌNH NHÓM</button>
+
+    <div id="result-area">
+        <div id="team-info-display" style="font-size: 18px; font-weight: bold; color: #00796b; margin-bottom: 15px; text-transform: uppercase;"></div>
+        <div class="calc-details" id="calc-details"></div>
+        <div class="final-score" id="final-score-text"></div>
+        <div id="keyword-display"></div>
+        <button class="reset-btn" onclick="resetForm()">Làm mới cho nhóm sau</button>
+    </div>
+</div>
+
+<script>
+    function calculateAverage() {
+        const teamNameInput = document.getElementById('teamName');
+        const classNameInput = document.getElementById('className');
+        const inputsContainer = document.getElementById('inputs-container');
+        const inputs = inputsContainer.querySelectorAll('input[type="number"]');
+        const resultArea = document.getElementById('result-area');
+        const teamInfoDisplay = document.getElementById('team-info-display');
+        const calcDetails = document.getElementById('calc-details');
+        const finalScoreText = document.getElementById('final-score-text');
+        const keywordDisplay = document.getElementById('keyword-display');
+        const errorMsg = document.getElementById('error-message');
+
+        let totalScore = 0;
+        let count = 0;
+        let valid = true;
+
+        // Reset trạng thái
+        resultArea.style.display = 'none';
+        resultArea.className = '';
+        keywordDisplay.innerHTML = '';
+        errorMsg.style.display = 'none';
+        inputs.forEach(input => input.style.borderColor = '#b2dfdb');
+        teamNameInput.style.borderColor = '#b2dfdb';
+        classNameInput.style.borderColor = '#b2dfdb';
+
+        const teamName = teamNameInput.value.trim();
+        const className = classNameInput.value.trim();
+
+        if (!teamName || !className) {
+            errorMsg.innerText = "Lỗi: Vui lòng nhập đầy đủ Tên nhóm và Tên lớp.";
+            errorMsg.style.display = 'block';
+            if (!teamName) teamNameInput.style.borderColor = '#c62828';
+            if (!className) classNameInput.style.borderColor = '#c62828';
+            return;
+        }
+
+        // Duyệt qua các ô nhập liệu
+        inputs.forEach((input, index) => {
+            let value = input.value.trim();
+
+            if (value !== "") {
+                let score = parseFloat(value);
+
+                // Kiểm tra tính hợp lệ của điểm
+                if (isNaN(score) || score < 0 || score > 20) {
+                    errorMsg.innerText = `Lỗi: Điểm của Học sinh ${index + 1} không hợp lệ (phải từ 0 đến 20).`;
+                    errorMsg.style.display = 'block';
+                    input.style.borderColor = '#c62828';
+                    input.focus();
+                    valid = false;
+                    return; 
+                }
+                totalScore += score;
+                count++;
+            }
+        });
+
+        if (!valid) return; // Dừng nếu dữ liệu lỗi
+
+        if (count === 0) {
+            errorMsg.innerText = "Lỗi: Vui lòng nhập điểm cho ít nhất một học sinh.";
+            errorMsg.style.display = 'block';
+            return;
+        }
+
+        // Tính trung bình
+        let average = totalScore / count;
+        // Làm tròn đến 1 chữ số thập phân
+        let roundedAverage = Math.round(average * 10) / 10;
+
+        // Hiển thị vùng kết quả
+        resultArea.style.display = 'block';
+        teamInfoDisplay.innerHTML = `NHÓM: ${teamName} - LỚP: ${className}`;
+        calcDetails.innerHTML = `Tổng điểm: <b>${totalScore}</b> &nbsp;|&nbsp; Số thành viên: <b>${count}</b>`;
+        finalScoreText.innerHTML = `ĐIỂM TRUNG BÌNH: ${roundedAverage.toFixed(1)}`;
+
+        // Kiểm tra điều kiện nhận từ khóa
+        if (roundedAverage >= 10) {
+            resultArea.classList.add('success');
+            keywordDisplay.innerHTML = `
+                <div>CHÚC MỪNG! Nhận được từ khóa:</div>
+                <div class="keyword-box">KEY</div>
+            `;
+        } else {
+            resultArea.classList.add('fail');
+            keywordDisplay.innerHTML = `
+                <div class="try-again">Rất tiếc! Điểm trung bình dưới 10.<br>Chưa đạt đủ điều kiện để nhận từ khóa.</div>
+            `;
+        }
+    }
+
+    function resetForm() {
+        // Xóa sạch các ô nhập
+        const inputs = document.querySelectorAll('input[type="number"], input[type="text"]');
+        inputs.forEach(input => {
+            input.value = '';
+            input.style.borderColor = '#b2dfdb';
+        });
+
+        // Ẩn vùng kết quả & lỗi
+        const resultArea = document.getElementById('result-area');
+        const errorMsg = document.getElementById('error-message');
+        
+        resultArea.style.display = 'none';
+        resultArea.className = '';
+        errorMsg.style.display = 'none';
+        
+        // Focus lại vào ô đầu tiên
+        document.getElementById('teamName').focus();
+    }
+</script>
+
+</body>
+</html>
